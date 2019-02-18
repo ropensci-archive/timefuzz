@@ -1,4 +1,10 @@
 # FIXME: funky stuff with method aliases going on here, sort it out
+
+#' Time
+#' @examples
+#' x <- Time$new()
+#' x$now()
+#' x$now_with_mock_time()
 Time <- R6::R6Class(
   "Time",
   public = list(

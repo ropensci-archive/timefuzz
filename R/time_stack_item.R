@@ -1,4 +1,4 @@
-# A data class for carrying around "time movement" objects.  
+# A data class for carrying around "time movement" objects.
 # Makes it easy to keep track of the time movements on a simple stack.
 TimeStackItem <- R6::R6Class(
   "TimeStackItem",
