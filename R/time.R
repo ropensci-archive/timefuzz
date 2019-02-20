@@ -1,6 +1,8 @@
-# FIXME: funky stuff with method aliases going on here, sort it out
+fuzzy_env <- new.env()
 
+# FIXME: funky stuff with method aliases going on here, sort it out
 #' Time
+#' @export
 #' @examples
 #' x <- Time$new()
 #' x$now()
@@ -15,14 +17,17 @@ Time <- R6::R6Class(
     # new_with_mock_time = NULL,
     new_without_mock_time = NULL,
 
-    now = function() lubridate::now(),
+    # now = function() super$now(),
 
-    now_without_mock_time = function() self$now(),
+    now_without_mock_time = function() {
+      clock::clock_mock(FALSE)
+      self$initialize()$now()
+    },
 
     mock_time = function() {
-      mocked_time_stack_item <- timefuzz_conf$top_stack_item
+      mocked_time_stack_item <- fuzzy_env$stack_item
       if (is.null(mocked_time_stack_item)) return(NULL)
-      mocked_time_stack_item$time()
+      mocked_time_stack_item$time$time
     },
 
     now_with_mock_time = function() {
@@ -34,3 +39,5 @@ Time <- R6::R6Class(
     }
   )
 )
+
+fuzzy_env$time <- Time$new()

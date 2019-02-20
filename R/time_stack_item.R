@@ -1,26 +1,47 @@
 # A data class for carrying around "time movement" objects.
 # Makes it easy to keep track of the time movements on a simple stack.
+
+#' TimeStackItem
+#' @export
+#' @examples
+#' x <- TimeStackItem$new(mock_type = "freeze", date = "2019-02-18")
+#' x
+#' x$time
+#' x$time$time
+#' x$time$year
+#' x$scaling_factor_
+#' x$travel_offset_
+#' x$year()
+#' x$min()
 TimeStackItem <- R6::R6Class(
   "TimeStackItem",
   public = list(
-    # scaling_factor = NULL,
-    # travel_offset  = NULL,
-    mock_type      = NULL,
-    time           = NULL,
-    time_was       = NULL,
+    scaling_factor_ = NULL,
+    travel_offset_  = NULL,
+    mock_type       = NULL,
+    time            = NULL,
+    time_was        = NULL,
 
-    initialize = function(mock_type, args) {
+    initialize = function(mock_type, date) {
       if (!mock_type %in% c("freeze", "travel", "scale"))
-        stop("Unknown mock_type #{mock_type}")
-      self$scaling_factor <- NULL
-      self$travel_offset  <- NULL
-      # self$scaling_factor <- args.shift if (mock_type == "scale") # FIXME
-      self$mock_type      <- mock_type
-      self$time           <- parse_time(args)
-      self$time_was       <- Time.now_without_mock_time
-      self$travel_offset  <- compute_travel_offset
+        stop(paste("Unknown mock_type ", mock_type))
+      self$scaling_factor_ <- if (mock_type == "scale") date else NULL
+      self$mock_type       <- mock_type
+      self$time            <- parse_time(date)
+      try_now_wo_mock <- tryCatch(clock::clock()$now_without_mock_time(),
+        error = function(e) e)
+      self$time_was        <- if (inherits(try_now_wo_mock, "error"))
+        clock::clock()$now()
+      else
+        try_now_wo_mock
+      # self$travel_offset_  <- private$compute_travel_offset()
+      # private$old_sys_date <- Sys.Date
+      # unlockBinding("Sys.Date", "pkg:base")
+      # unlockBinding("Sys.Date", asNamespace("base"))
+      # utils::assignInNamespace("Sys.Date", timefuzz_sys_date, "base")
     },
 
+    # date parts
     year = function() self$time$year,
     month = function() self$time$month,
     day = function() self$time$day,
@@ -28,93 +49,39 @@ TimeStackItem <- R6::R6Class(
     min = function() self$time$min,
     sec = function() self$time$sec,
     utc_offset = function() self$time$utc_offset,
+
     travel_offset = function()
-      if (!self$mock_type == "freeze") self$travel_offset,
-    travel_offset_days = function() round(self$travel_offset / 60 / 60 / 24),
-    scaling_factor = function() self$scaling_factor
+      if (!self$mock_type == "freeze") self$travel_offset_,
+    travel_offset_days = function() round(self$travel_offset_ / 60 / 60 / 24),
+    scaling_factor = function() self$scaling_factor_,
+
+    return = function() clock::clock_mock(FALSE)
+  ),
+
+  private = list(
+    # old_sys_date = NULL,
+    compute_travel_offset = function() {
+      self$time$time - clock::clock()$now_without_mock_time()
+    }
   )
 )
 
-#   def time(time_klass = Time)
-#     if @time.respond_to?(:in_time_zone)
-#       time = time_klass.at(@time.dup.localtime)
-#     else
-#       time = time_klass.at(@time)
-#     end
+parse_time <- function(x) {
+  parsed_date <- tryCatch(as.POSIXct(x), error = function(e) e)
+  if (inherits(parsed_date, "error")) stop(x, " was not parseable as a date")
+  z <- list(
+    # time = parsed_date,
+    year = format(parsed_date, format = "%Y"),
+    month = format(parsed_date, format = "%m"),
+    day = format(parsed_date, format = "%d"),
+    hour = format(parsed_date, format = "%H"),
+    min = format(parsed_date, format = "%M"),
+    sec = format(parsed_date, format = "%S")
+    # utc_offset = format(parsed_date, format = "%z")
+  )
+  return(do.call(clock::clock, z))
+}
 
-#     if travel_offset.nil?
-#       time
-#     elsif scaling_factor.nil?
-#       time_klass.at(Time.now_without_mock_time + travel_offset)
-#     else
-#       time_klass.at(scaled_time)
-#     end
-#   end
-
-#   def scaled_time
-#     (@time + (Time.now_without_mock_time - @time_was) * scaling_factor).to_f
-#   end
-
-#   def date(date_klass = Date)
-#     date_klass.jd(time.__send__(:to_date).jd)
-#   end
-
-#   def datetime(datetime_klass = DateTime)
-#     if Float.method_defined?(:to_r)
-#       fractions_of_a_second = time.to_f % 1
-#       datetime_klass.new(year, month, day, hour, min, (fractions_of_a_second + sec), utc_offset_to_rational(utc_offset))
-#     else
-#       datetime_klass.new(year, month, day, hour, min, sec, utc_offset_to_rational(utc_offset))
-#     end
-#   end
-
-#   private
-
-#   def rational_to_utc_offset(rational)
-#     ((24.0 / rational.denominator) * rational.numerator) * (60 * 60)
-#   end
-
-#   def utc_offset_to_rational(utc_offset)
-#     Rational(utc_offset, 24 * 60 * 60)
-#   end
-
-#   def parse_time(*args)
-#     arg = args.shift
-#     if arg.is_a?(Time)
-#       arg
-#     elsif Object.const_defined?(:DateTime) && arg.is_a?(DateTime)
-#       time_klass.at(arg.to_time.to_f).getlocal
-#     elsif Object.const_defined?(:Date) && arg.is_a?(Date)
-#       time_klass.local(arg.year, arg.month, arg.day, 0, 0, 0)
-#     elsif args.empty? && (arg.kind_of?(Integer) || arg.kind_of?(Float))
-#       time_klass.now + arg
-#     elsif arg.nil?
-#       time_klass.now
-#     else
-#       if arg.is_a?(String) && Time.respond_to?(:parse)
-#         time_klass.parse(arg)
-#       else
-#         # we'll just assume it's a list of y/m/d/h/m/s
-#         year   = arg        || 2000
-#         month  = args.shift || 1
-#         day    = args.shift || 1
-#         hour   = args.shift || 0
-#         minute = args.shift || 0
-#         second = args.shift || 0
-#         time_klass.local(year, month, day, hour, minute, second)
-#       end
-#     end
-#   end
-
-#   def compute_travel_offset
-#     time - Time.now_without_mock_time
-#   end
-
-#   def times_are_equal_within_epsilon t1, t2, epsilon_in_seconds
-#     (t1 - t2).abs < epsilon_in_seconds
-#   end
-
-#   def time_klass
-#     Time.respond_to?(:zone) && Time.zone ? Time.zone : Time
-#   end
-# end
+# timefuzz_sys_date <- function() {
+#   fuzzy_env$stack_item$time()
+# }

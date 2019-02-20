@@ -1,7 +1,7 @@
 Package: timefuzz
 Title: Time Travel to Test Time Dependent Code
 Description: Time travel to test time dependent code.
-Version: 0.0.1.9100
+Version: 0.0.1.9210
 Authors@R: c(
     person("Scott", "Chamberlain",
         role = c("aut", "cre"),
@@ -13,7 +13,9 @@ BugReports: http://github.com/ropenscilabs/timefuzz/issues
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 Imports: 
-    R6
+    R6,
+    clock
 Suggests:
-    testthat
+    testthat,
+Remotes: ropenscilabs/clock
 RoxygenNote: 6.1.1

@@ -13,6 +13,17 @@ Time travel to test time dependent code - a port of Ruby's [timecop](https://git
 Package API:
 
  - `time_fuzz`
+ - `TimeStackItem`
+ - `Time`
+
+Features supported:
+
+- freeze: freeze time to a specific point
+
+Hope to support soon:
+
+- travel: travel back to a specific point in time, but allow time to continue moving forward from there
+- scale: scale time by a given scaling factor that will cause time to move at an accelerated pace
 
 ## Installation
 
@@ -26,6 +37,86 @@ remotes::install_github("ropenscilabs/timefuzz")
 library("timefuzz")
 ```
 
+## freeze
+
+### freeze with a code block
+
+
+```r
+library(timefuzz)
+library(clock)
+library(testthat)
+```
+
+`book_due()` is a toy function that tells us if a book is due
+
+
+```r
+book_due <- function(due_date = "2020-04-01") {
+  as.POSIXct(clock::clock()$date()) > as.POSIXct(due_date)
+}
+```
+
+Given the due date of `2020-04-01` the book is not due
+
+
+```r
+expect_false(book_due()) # FALSE
+```
+
+Create a `time_fuzz` object
+
+
+```r
+(x <- time_fuzz$new())
+#> <time_fuzz> 
+#>   date:
+```
+
+Call `freez()`, passing the date you want to freeze time to, and then a code block to run
+in the context of that frozen time. Here we'll freeze time to today + 450 days
+
+
+```r
+x$freeze(Sys.Date() + 450, {
+  expect_true(book_due())
+})
+```
+
+`book_due()` results in `TRUE` now, whereas it was `FALSE` above in real time
+
+### freeze without a code block
+
+
+```r
+x <- time_fuzz$new()
+## set to today + 450 days
+x$freeze(Sys.Date() + 450)
+```
+
+We're in the freezed date. So any time based actions using the [clock][] package 
+are now using your frozen time context.
+
+
+```r
+clock_now()
+#> [1] "2020-05-14 17:00:00 PDT"
+```
+
+call `$return()` to unfreeze
+
+
+```r
+x$return()
+```
+
+now we're back in current time
+
+
+```r
+clock_now()
+#> [1] "2019-02-20 12:43:53 PST"
+```
 
 ## Meta
 
