@@ -4,11 +4,11 @@
 \name{timefuzz-package}
 \alias{timefuzz-package}
 \alias{timefuzz}
-\title{Time Travel to Test Time Dependent Code}
+\title{timefuzz}
 \description{
 Time Travel to Test Time Dependent Code
 }
 \author{
-Scott Chamberlain \href{mailto:sckott@protonmail.com}{sckott@protonmail.com}
+Scott Chamberlain
 }
 \keyword{package}

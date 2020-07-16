@@ -3,7 +3,7 @@
 
 #' TimeStackItem
 #' @export
-#' @examples
+#' @examples \dontrun{
 #' x <- TimeStackItem$new(mock_type = "freeze", date = "2019-02-18")
 #' x
 #' x$time
@@ -13,6 +13,7 @@
 #' x$travel_offset_
 #' x$year()
 #' x$min()
+#' }
 TimeStackItem <- R6::R6Class(
   "TimeStackItem",
   public = list(

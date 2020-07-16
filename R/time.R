@@ -3,10 +3,11 @@ fuzzy_env <- new.env()
 # FIXME: funky stuff with method aliases going on here, sort it out
 #' Time
 #' @export
-#' @examples
+#' @examples \dontrun{
 #' x <- Time$new()
-#' x$now()
+#' x$now_without_mock_time()
 #' x$now_with_mock_time()
+#' }
 Time <- R6::R6Class(
   "Time",
   public = list(

@@ -28,9 +28,6 @@
 #' x$scale({
 #'   5 + 5
 #' })
-#' }
-#' 
-#' 
 #' 
 #' library(timefuzz)
 #' library(clock)
@@ -63,6 +60,7 @@
 #' x$return()
 #' clock:::clock_opts$mock
 #' clock()$now()
+#' }
 time_fuzz <- R6::R6Class(
   "time_fuzz",
   public = list(
