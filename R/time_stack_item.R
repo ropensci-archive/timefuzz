@@ -56,7 +56,7 @@ TimeStackItem <- R6::R6Class(
     travel_offset_days = function() round(self$travel_offset_ / 60 / 60 / 24),
     scaling_factor = function() self$scaling_factor_,
 
-    return = function() clock::clock_mock(FALSE)
+    unfreeze = function() clock::clock_mock(FALSE)
   ),
 
   private = list(

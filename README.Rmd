@@ -53,12 +53,12 @@ library(testthat)
 `book_due()` is a toy function that tells us if a book is due
 
 ```{r}
-book_due <- function(due_date = "2020-04-01") {
+book_due <- function(due_date = Sys.Date() + 10) {
   as.POSIXct(clock::clock()$date()) > as.POSIXct(due_date)
 }
 ```
 
-Given the due date of `2020-04-01` the book is not due
+Given the due date of `r Sys.Date() + 10` the book is not due
 
 ```{r}
 expect_false(book_due()) # FALSE
@@ -67,7 +67,8 @@ expect_false(book_due()) # FALSE
 Create a `time_fuzz` object
 
 ```{r}
-(x <- time_fuzz$new())
+x <- time_fuzz$new()
+x
 ```
 
 Call `freez()`, passing the date you want to freeze time to, and then a code block to run
@@ -96,10 +97,10 @@ are now using your frozen time context.
 clock_now()
 ```
 
-call `$return()` to unfreeze
+call `$unfreeze()` to unfreeze
 
 ```{r}
-x$return()
+x$unfreeze()
 ```
 
 now we're back in current time

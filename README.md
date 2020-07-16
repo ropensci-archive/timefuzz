@@ -52,12 +52,12 @@ library(testthat)
 
 
 ```r
-book_due <- function(due_date = "2020-04-01") {
+book_due <- function(due_date = Sys.Date() + 10) {
   as.POSIXct(clock::clock()$date()) > as.POSIXct(due_date)
 }
 ```
 
-Given the due date of `2020-04-01` the book is not due
+Given the due date of 2020-07-26 the book is not due
 
 
 ```r
@@ -68,7 +68,8 @@ Create a `time_fuzz` object
 
 
 ```r
-(x <- time_fuzz$new())
+x <- time_fuzz$new()
+x
 #> <time_fuzz> 
 #>   date:
 ```
@@ -81,6 +82,7 @@ in the context of that frozen time. Here we'll freeze time to today + 450 days
 x$freeze(Sys.Date() + 450, {
   expect_true(book_due())
 })
+#> [1] TRUE
 ```
 
 `book_due()` results in `TRUE` now, whereas it was `FALSE` above in real time
@@ -100,14 +102,14 @@ are now using your frozen time context.
 
 ```r
 clock_now()
-#> [1] "2020-05-14 17:00:00 PDT"
+#> [1] "2021-10-08 17:00:00 PDT"
 ```
 
-call `$return()` to unfreeze
+call `$unfreeze()` to unfreeze
 
 
 ```r
-x$return()
+x$unfreeze()
 ```
 
 now we're back in current time
@@ -115,7 +117,7 @@ now we're back in current time
 
 ```r
 clock_now()
-#> [1] "2019-02-20 12:43:53 PST"
+#> [1] "2020-07-16 11:49:05 PDT"
 ```
 
 ## Meta
@@ -123,6 +125,6 @@ clock_now()
 * Please [report any issues or bugs](https://github.com/ropenscilabs/timefuzz/issues).
 * License: MIT
 * Get citation information for `timefuzz` in R doing `citation(package = 'timefuzz')`
-* Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
+* Please note that this package is released with a [Contributor Code of Conduct](https://ropensci.org/code-of-conduct/). By contributing to this project, you agree to abide by its terms.
 
 [![rofooter](https://ropensci.org/public_images/github_footer.png)](https://ropensci.org)
