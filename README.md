@@ -53,11 +53,11 @@ library(testthat)
 
 ```r
 book_due <- function(due_date = Sys.Date() + 10) {
-  as.POSIXct(clock::clock()$date()) > as.POSIXct(due_date)
+  sys_date() > due_date
 }
 ```
 
-Given the due date of 2020-07-26 the book is not due
+Given the due date of 2020-07-31 the book is not due
 
 
 ```r
@@ -101,8 +101,8 @@ are now using your frozen time context.
 
 
 ```r
-clock_now()
-#> [1] "2021-10-08 17:00:00 PDT"
+sys_time()
+#> [1] "2021-10-13 17:00:00 PDT"
 ```
 
 call `$unfreeze()` to unfreeze
@@ -116,8 +116,8 @@ now we're back in current time
 
 
 ```r
-clock_now()
-#> [1] "2020-07-16 11:49:05 PDT"
+sys_time()
+#> [1] "2020-07-21 17:18:32 PDT"
 ```
 
 ## Meta

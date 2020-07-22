@@ -54,7 +54,7 @@ library(testthat)
 
 ```{r}
 book_due <- function(due_date = Sys.Date() + 10) {
-  as.POSIXct(clock::clock()$date()) > as.POSIXct(due_date)
+  sys_date() > due_date
 }
 ```
 
@@ -94,7 +94,7 @@ We're in the freezed date. So any time based actions using the [clock][] package
 are now using your frozen time context.
 
 ```{r}
-clock_now()
+sys_time()
 ```
 
 call `$unfreeze()` to unfreeze
@@ -106,7 +106,7 @@ x$unfreeze()
 now we're back in current time
 
 ```{r}
-clock_now()
+sys_time()
 ```
 
 ## Meta
