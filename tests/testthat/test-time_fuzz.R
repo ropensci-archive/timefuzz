@@ -17,7 +17,7 @@ test_that("time_fuzz", {
   # time mocking
   library(clock)
   book_due <- function(due_date = "2020-08-25") {
-    as.POSIXct(clock::clock()$date()) > as.POSIXct(due_date)
+    as.POSIXct(clock::now()$date) > as.POSIXct(due_date)
   }
   expect_false(book_due()) # FALSE
   x <- time_fuzz$new()
@@ -31,7 +31,7 @@ test_that("time_fuzz", {
   
   # before mocking turned on
   expect_false(clock:::clock_opts$mock)
-  expect_equal(round(as.numeric(clock()$now() - Sys.time())), 0)
+  expect_equal(round(as.numeric(clock::sys_time() - Sys.time())), 0)
   
   # after mocking turned on
   clock_mock()
@@ -41,10 +41,10 @@ test_that("time_fuzz", {
 
   expect_true(clock:::clock_opts$mock)
 
-  expect_gt(round(as.numeric(clock()$now() - Sys.time())), 400)
+  expect_gt(round(as.numeric(clock::sys_time() - Sys.time())), 400)
 
   x$unfreeze()
 
   expect_false(clock:::clock_opts$mock)
-  expect_equal(round(as.numeric(clock()$now() - Sys.time())), 0)
+  expect_equal(round(as.numeric(clock::sys_time() - Sys.time())), 0)
 })
