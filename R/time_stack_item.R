@@ -29,10 +29,10 @@ TimeStackItem <- R6::R6Class(
       self$scaling_factor_ <- if (mock_type == "scale") date else NULL
       self$mock_type       <- mock_type
       self$time            <- parse_time(date)
-      try_now_wo_mock <- tryCatch(clock::clock()$now_without_mock_time(),
+      try_now_wo_mock <- tryCatch(clock::now()$now_without_mock_time(),
         error = function(e) e)
       self$time_was        <- if (inherits(try_now_wo_mock, "error"))
-        clock::clock()$now()
+        clock::now()$now()
       else
         try_now_wo_mock
       # self$travel_offset_  <- private$compute_travel_offset()
@@ -62,7 +62,7 @@ TimeStackItem <- R6::R6Class(
   private = list(
     # old_sys_date = NULL,
     compute_travel_offset = function() {
-      self$time$time - clock::clock()$now_without_mock_time()
+      self$time$time - clock::now()$now_without_mock_time()
     }
   )
 )
