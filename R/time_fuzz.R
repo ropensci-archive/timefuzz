@@ -61,6 +61,14 @@
 #' x$unfreeze()
 #' clock:::clock_opts$mock
 #' clock()$now()
+#' 
+#' # time travel
+#' library(clock)
+#' x <- time_fuzz$new()
+#' x$travel(Sys.Date() - 1000)
+#' Sys.Date()
+#' sys_date()
+#' x$unfreeze()
 #' }
 time_fuzz <- R6::R6Class(
   "time_fuzz",
@@ -82,6 +90,15 @@ time_fuzz <- R6::R6Class(
         on.exit(stack_item$unfreeze())
         rlang::eval_tidy(block)
       }
+    },
+
+    travel = function(date, block = NULL) {
+      stack_item <- TimeStackItem$new(mock_type = "travel", date)
+      fuzzy_env$stack_item <- stack_item
+      clock::clock_mock()
+      if (!is.null(block)) block <- rlang::enquo(block)
+      if (is.null(block)) return(invisible())
+
     },
 
     unfreeze = function() {

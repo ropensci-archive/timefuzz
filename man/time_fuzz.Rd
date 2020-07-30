@@ -67,5 +67,13 @@ clock()$now()
 x$unfreeze()
 clock:::clock_opts$mock
 clock()$now()
+
+# time travel
+library(clock)
+x <- time_fuzz$new()
+x$travel(Sys.Date() - 1000)
+Sys.Date()
+sys_date()
+x$unfreeze()
 }
 }

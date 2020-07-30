@@ -13,8 +13,15 @@ x
 x$time
 x$time$time
 x$time$year
-x$scaling_factor_
-x$travel_offset_
+x$year()
+x$min()
+
+x <- TimeStackItem$new(mock_type = "travel", date = "2009-02-18")
+x
+x$time
+x$time$time
+x$time$year
+x$travel_offset()
 x$year()
 x$min()
 }

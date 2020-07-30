@@ -14,9 +14,9 @@ Time <- R6::R6Class(
     # now = NULL,
     # now_with_mock_time = NULL,
     # now_without_mock_time = NULL,
-    new = NULL,
+    # new = NULL,
     # new_with_mock_time = NULL,
-    new_without_mock_time = NULL,
+    # new_without_mock_time = NULL,
 
     # now = function() super$now(),
 

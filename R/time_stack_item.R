@@ -9,8 +9,15 @@
 #' x$time
 #' x$time$time
 #' x$time$year
-#' x$scaling_factor_
-#' x$travel_offset_
+#' x$year()
+#' x$min()
+#' 
+#' x <- TimeStackItem$new(mock_type = "travel", date = "2009-02-18")
+#' x
+#' x$time
+#' x$time$time
+#' x$time$year
+#' x$travel_offset()
 #' x$year()
 #' x$min()
 #' }
@@ -35,7 +42,8 @@ TimeStackItem <- R6::R6Class(
         clock::now()$now()
       else
         try_now_wo_mock
-      # self$travel_offset_  <- private$compute_travel_offset()
+      # if (mock_type == "travel") self$travel_offset_  <-
+      #   private$compute_travel_offset()
       # private$old_sys_date <- Sys.Date
       # unlockBinding("Sys.Date", "pkg:base")
       # unlockBinding("Sys.Date", asNamespace("base"))
