@@ -29,10 +29,10 @@ TimeStackItem <- R6::R6Class(
       self$scaling_factor_ <- if (mock_type == "scale") date else NULL
       self$mock_type       <- mock_type
       self$time            <- parse_time(date)
-      try_now_wo_mock <- tryCatch(clock::now()$now_without_mock_time(),
+      try_now_wo_mock <- tryCatch(pendulum::now()$now_without_mock_time(),
         error = function(e) e)
       self$time_was        <- if (inherits(try_now_wo_mock, "error"))
-        clock::now()$now()
+        pendulum::now()$now()
       else
         try_now_wo_mock
       # self$travel_offset_  <- private$compute_travel_offset()
@@ -56,13 +56,13 @@ TimeStackItem <- R6::R6Class(
     travel_offset_days = function() round(self$travel_offset_ / 60 / 60 / 24),
     scaling_factor = function() self$scaling_factor_,
 
-    unfreeze = function() clock::clock_mock(FALSE)
+    unfreeze = function() pendulum::clock_mock(FALSE)
   ),
 
   private = list(
     # old_sys_date = NULL,
     compute_travel_offset = function() {
-      self$time$time - clock::now()$now_without_mock_time()
+      self$time$time - pendulum::now()$now_without_mock_time()
     }
   )
 )
@@ -80,7 +80,7 @@ parse_time <- function(x) {
     sec = format(parsed_date, format = "%S")
     # utc_offset = format(parsed_date, format = "%z")
   )
-  return(do.call(clock::clock, z))
+  return(do.call(pendulum::clock, z))
 }
 
 # timefuzz_sys_date <- function() {

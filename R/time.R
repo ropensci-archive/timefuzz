@@ -21,7 +21,7 @@ Time <- R6::R6Class(
     # now = function() super$now(),
 
     now_without_mock_time = function() {
-      clock::clock_mock(FALSE)
+      pendulum::clock_mock(FALSE)
       self$initialize()$now()
     },
 

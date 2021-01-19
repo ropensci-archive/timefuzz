@@ -38,20 +38,20 @@ x$scale({
 library(timefuzz)
 library(clock)
 library(testthat)
-# clock::clock_mock()
-clock:::clock_opts$mock
+# pendulum::clock_mock()
+pendulum:::clock_opts$mock
 (cl <- clock())
 book_due <- function(due_date = "2020-08-25") {
-  as.POSIXct(clock::clock()$date()) > as.POSIXct(due_date)
+  as.POSIXct(pendulum::clock()$date()) > as.POSIXct(due_date)
 }
 expect_false(book_due()) # FALSE
 x <- time_fuzz$new()
 x
 x$freeze(Sys.Date() + 60, {
-  # clock::clock_mock()
-  # cat(clock:::clock_opts$mock, sep = "\n")
-  # cat(as.character(clock::clock()$date()), sep = "\n")
-  # cat(clock:::clock_opts$mock, sep = "\n")
+  # pendulum::clock_mock()
+  # cat(pendulum:::clock_opts$mock, sep = "\n")
+  # cat(as.character(pendulum::clock()$date()), sep = "\n")
+  # cat(pendulum:::clock_opts$mock, sep = "\n")
   expect_true(book_due())
 })
 
@@ -62,10 +62,10 @@ Sys.time()
 x <- time_fuzz$new()
 ## set to today + 435 days
 x$freeze(Sys.Date() + 435)
-clock:::clock_opts$mock
+pendulum:::clock_opts$mock
 clock()$now()
 x$unfreeze()
-clock:::clock_opts$mock
+pendulum:::clock_opts$mock
 clock()$now()
 }
 }

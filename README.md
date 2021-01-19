@@ -44,7 +44,7 @@ library("timefuzz")
 
 ```r
 library(timefuzz)
-library(clock)
+library(pendulum)
 library(testthat)
 ```
 
@@ -57,7 +57,7 @@ book_due <- function(due_date = Sys.Date() + 10) {
 }
 ```
 
-Given the due date of 2020-07-31 the book is not due
+Given the due date of 2021-01-29 the book is not due
 
 
 ```r
@@ -82,7 +82,10 @@ in the context of that frozen time. Here we'll freeze time to today + 450 days
 x$freeze(Sys.Date() + 450, {
   expect_true(book_due())
 })
-#> [1] TRUE
+#> Error: book_due() is not TRUE
+#> 
+#> `actual`:   FALSE
+#> `expected`: TRUE
 ```
 
 `book_due()` results in `TRUE` now, whereas it was `FALSE` above in real time
@@ -96,13 +99,13 @@ x <- time_fuzz$new()
 x$freeze(Sys.Date() + 450)
 ```
 
-We're in the freezed date. So any time based actions using the [clock][] package 
+We're in the freezed date. So any time based actions using the [pendulum][] package 
 are now using your frozen time context.
 
 
 ```r
 sys_time()
-#> [1] "2021-10-13 17:00:00 PDT"
+#> [1] "2021-01-19 10:29:39 PST"
 ```
 
 call `$unfreeze()` to unfreeze
@@ -117,7 +120,7 @@ now we're back in current time
 
 ```r
 sys_time()
-#> [1] "2020-07-21 17:18:32 PDT"
+#> [1] "2021-01-19 10:29:39 PST"
 ```
 
 ## Meta
@@ -126,5 +129,3 @@ sys_time()
 * License: MIT
 * Get citation information for `timefuzz` in R doing `citation(package = 'timefuzz')`
 * Please note that this package is released with a [Contributor Code of Conduct](https://ropensci.org/code-of-conduct/). By contributing to this project, you agree to abide by its terms.
-
-[![rofooter](https://ropensci.org/public_images/github_footer.png)](https://ropensci.org)

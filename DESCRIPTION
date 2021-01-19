@@ -14,9 +14,9 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE, r6 = FALSE)
 Imports: 
     R6,
-    clock,
+    pendulum,
     rlang
 Suggests:
     testthat,
-Remotes: ropensci/clock
+Remotes: ropensci/pendulum
 RoxygenNote: 7.1.1
